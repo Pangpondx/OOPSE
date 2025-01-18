@@ -10,6 +10,11 @@ public class ATM implements ATMAc {
         Scanner scanner = new Scanner(System.in);
         ATM atm = new ATM();
 
+        //กำหนดอัตราแลกเปลี่ยน BTC
+        System.out.print("Please enter BTC rate => ");
+        int change = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("1 BTC has a value of "+ change +" baht.\n");
         //สร้าง Manager
         System.out.print("Create the manager (Y/N) : ");
         String create = scanner.nextLine();
@@ -54,11 +59,21 @@ public class ATM implements ATMAc {
                     String acId = scanner.nextLine();
                     System.out.print("Password : ");
                     String acPassword = scanner.nextLine();
-                    System.out.print("Initial Balance : ");
-                    int balance = scanner.nextInt();
-                    scanner.nextLine(); 
+                    System.out.print("Initial Balance BTC or bath : ");
+                    String word = scanner.nextLine();
+                    double coin;
+                    double balance;
+                    if(word.equalsIgnoreCase("BTC")){
+                        System.out.print("Initial Balance : ");
+                        coin = scanner.nextInt();
+                        coin = coin*change;
+                    }else{
+                        System.out.print("Initial Balance : ");
+                        coin = scanner.nextInt();
+                    }balance = coin;
+                    scanner.nextLine();
 
-                    Account account = new Account(acIdCard, acName, acGender, acId, acPassword, balance);
+                    Account account = new Account(acIdCard, acName, acGender, acId, acPassword, balance, change);
                     atm.addAccount(account);
                     System.out.println("Account added successfully!!!");
                 }
@@ -95,18 +110,22 @@ public class ATM implements ATMAc {
                                     atm.checkable(loggedInAccount);
                                     break;
                                 case 2:
+                                    System.out.print("Want to deposit BTC or baht : ");
+                                    String Dps = scanner.nextLine();
                                     System.out.print("Enter amount to deposit : ");
-                                    int depositAmount = scanner.nextInt();
+                                    double depositAmount = scanner.nextDouble();
                                     scanner.nextLine(); 
                                     System.out.println("Depositing money");
-                                    atm.depositable(loggedInAccount, depositAmount);
+                                    atm.depositable(loggedInAccount, depositAmount, Dps);
                                     break;
                                 case 3:
+                                    System.out.print("Want to withdraw BTC or baht : ");
+                                    String Wd = scanner.nextLine();
                                     System.out.print("Enter amount to withdraw : ");
-                                    int withdrawAmount = scanner.nextInt();
+                                    double withdrawAmount = scanner.nextDouble();
                                     scanner.nextLine(); 
                                     System.out.println("Withdrawing money");
-                                    atm.withdrawable(loggedInAccount, withdrawAmount);
+                                    atm.withdrawable(loggedInAccount, withdrawAmount, Wd);
                                     break;
                                 case 4:
                                     System.out.print("Enter recipient Account ID : ");
@@ -174,20 +193,23 @@ public class ATM implements ATMAc {
             System.out.println("No account is currently logged in.");
             return false;
         }
-        System.out
-                .println("Account : " + loginAccount.getNameAccount() + ", Balance : " + loginAccount.getMoney());
+        System.out.println("Account : " + loginAccount.getNameAccount() + ", Balance : " + loginAccount.getMoney() + " bath or " + loginAccount.getMoneybtc() + " BTC.");
         return true;
     }
 
     
     @Override
-    public boolean withdrawable(Account loginAccount, int amount) {
+    public boolean withdrawable(Account loginAccount, double amount, String wordWd) {
         if (loginAccount == null) {
             System.out.println("No account is currently logged in.");
             return false;
         }
         if (amount > 0 && loginAccount.getMoney() >= amount) {
-            loginAccount.withdraw(amount);
+            if(wordWd.equalsIgnoreCase("BTC")){
+                loginAccount.withdrawBtc(amount);
+                }else{
+                    loginAccount.withdraw(amount);
+                }
             return true;
         }
         System.out.println("Withdrawal failed. Insufficient funds or invalid amount.");
@@ -196,13 +218,17 @@ public class ATM implements ATMAc {
 
     
     @Override
-    public boolean depositable(Account loginAccount, int amount) {
+    public boolean depositable(Account loginAccount, double amount, String wordDps) {
         if (loginAccount == null) {
             System.out.println("No account is currently logged in.");
             return false;
         }
         if (amount > 0) {
-            loginAccount.deposit(amount);
+            if(wordDps.equalsIgnoreCase("BTC")){
+            loginAccount.depositBtc(amount);
+            }else{
+                loginAccount.deposit(amount);
+            }
             return true;
         }
         System.out.println("Deposit failed. Invalid amount.");
