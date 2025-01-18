@@ -111,21 +111,21 @@ public class ATM implements ATMAc {
                                     break;
                                 case 2:
                                     System.out.print("Want to deposit BTC or baht : ");
-                                    String Dps = scanner.nextLine();
+                                    String wordDps = scanner.nextLine();
                                     System.out.print("Enter amount to deposit : ");
                                     double depositAmount = scanner.nextDouble();
                                     scanner.nextLine(); 
                                     System.out.println("Depositing money");
-                                    atm.depositable(loggedInAccount, depositAmount, Dps);
+                                    atm.depositable(loggedInAccount, depositAmount, wordDps);
                                     break;
                                 case 3:
                                     System.out.print("Want to withdraw BTC or baht : ");
-                                    String Wd = scanner.nextLine();
+                                    String wordWd = scanner.nextLine();
                                     System.out.print("Enter amount to withdraw : ");
                                     double withdrawAmount = scanner.nextDouble();
                                     scanner.nextLine(); 
                                     System.out.println("Withdrawing money");
-                                    atm.withdrawable(loggedInAccount, withdrawAmount, Wd);
+                                    atm.withdrawable(loggedInAccount, withdrawAmount, wordWd);
                                     break;
                                 case 4:
                                     System.out.print("Enter recipient Account ID : ");
